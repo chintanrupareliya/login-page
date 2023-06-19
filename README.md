@@ -46,7 +46,7 @@ To run this application locally, follow these steps:
 3. Create `.env` file in `BACKEND` directory and add following ditalis
    1. JWT_SECRET = "Your secret key"
    2. MONGO_URL = "your mongodb url for database"
-   3.  PORT = your port number
+   3.  PORT = 3030
    
 4. Run:
     ```bash
