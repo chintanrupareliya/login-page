@@ -106,7 +106,8 @@ function oauthSignIn() {
 
   // Parameters to pass to OAuth 2.0 endpoint.
   var params = {
-    client_id: "YOUR_GOOGLE-API_CLIENT_ID",
+    client_id:
+      "591524786365-mgv1904ibanept57krmnios4hc58kkp0.apps.googleusercontent.com",
     redirect_uri: "http://127.0.0.1:5501/FRONTEND/main.html",
     response_type: "token",
     scope:
