@@ -1,7 +1,6 @@
 # LogIn-SingUp
 
 Login singUp page for website with backend in mongodb
-Sure! Here's a sample README file for the given repository:
 
 # LogIn-SignUp
 
