@@ -48,7 +48,11 @@ async function loginuser(event) {
   event.preventDefault();
   const email = document.querySelector(".login-email").value;
   const password = document.querySelector(".login-pass").value;
-  const result = await fetch("http://localhost:3030/api/auth/login", {
+  if (email === "" || password === "") {
+    alert("please enter email and password");
+    return;
+  }
+  await fetch("http://localhost:3030/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -57,12 +61,38 @@ async function loginuser(event) {
       email,
       password,
     }),
-  }).then((res) => res.json());
-  console.log(result);
-  sessionStorage.setItem("jwtToken", result);
-  if (result) {
-    window.location.href = "./main.html";
-  }
+  })
+    .then((res) => {
+      if (res.ok) {
+        // Successful response
+        return res.json();
+      } else {
+        // Error response
+        return res.json().then((errorData) => {
+          throw errorData; // Throw the error data to be caught in the next .catch block
+        });
+      }
+      // if (res.status !== 200) {
+      //   alert("worng password or email");
+      //   return res.json();
+      // } else {
+      //   return res.json();
+      // }
+    })
+    .then((data) => {
+      if (data) {
+        // console.log(data.error);
+        const newtoken = JSON.stringify(data).substring(
+          1,
+          JSON.stringify(data).length - 1
+        );
+        sessionStorage.setItem("jwtToken", newtoken);
+        window.location.href = "./main.html";
+      }
+    })
+    .catch((err) => {
+      alert(err.error);
+    });
 }
 //----> create new user<----//
 const formsingup = document.querySelector(".form-singup");
@@ -74,7 +104,7 @@ async function singupuser(event) {
   const password = document.querySelector(".singup-pass").value;
   const confirmpassword = document.querySelector(".confirm-password").value;
   if (password === confirmpassword) {
-    const result = await fetch("http://localhost:3030/api/auth/createuser", {
+    await fetch("http://localhost:3030/api/auth/createuser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,13 +114,31 @@ async function singupuser(event) {
         email,
         password,
       }),
-    }).then((res) => res.json());
-    console.log(result);
-    if (result) {
-      window.location.href = "./login.html";
-    }
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((errorData) => {
+            throw errorData; // Throw the error data to be caught in the next .catch block
+          });
+        }
+      })
+      .then((data) => {
+        if (data) {
+          const newtoken = JSON.stringify(data).substring(
+            1,
+            JSON.stringify(data).length - 1
+          );
+          sessionStorage.setItem("jwtToken", newtoken);
+          window.location.href = "./main.html";
+        }
+      })
+      .catch((err) => {
+        alert(err.error);
+      });
   } else {
-    alert("confirm password is not same as password");
+    alert("password and confirm password not match");
   }
 }
 
@@ -106,7 +154,8 @@ function oauthSignIn() {
 
   // Parameters to pass to OAuth 2.0 endpoint.
   var params = {
-    client_id: "YOUR_GOOGLE-API_CLIENT_ID",
+    client_id:
+      "591524786365-mgv1904ibanept57krmnios4hc58kkp0.apps.googleusercontent.com",
     redirect_uri: "http://127.0.0.1:5501/FRONTEND/main.html",
     response_type: "token",
     scope:

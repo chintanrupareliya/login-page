@@ -1,18 +1,28 @@
 const token = sessionStorage.getItem("jwtToken");
-fetch("http://localhost:3030/api/auth/getuser", {
-  method: "POST",
-  headers: {
-    "auth-token": token,
-  },
-})
-  .then((res) => res.json())
-  .then((userdata) => {
-    let user = document.querySelector(".user");
-    user.innerHTML = `Welcome ${userdata.name} ${userdata.email}`;
-  });
-window.addEventListener("beforeunload", () => {
-  sessionStorage.removeItem("jwtToken");
-});
+console.log(token);
+async function getuserdata() {
+  await fetch("http://localhost:3030/api/auth/getuser", {
+    method: "POST",
+    headers: {
+      "auth-token": token,
+    },
+  })
+    .then((res) => {
+      console.log(res);
+      return res.json();
+    })
+    .then((userdata) => {
+      let user = document.querySelector(".user");
+      user.innerHTML = `Welcome ${userdata.name} ${userdata.email}`;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+getuserdata();
+// window.addEventListener("beforeunload", () => {
+//   sessionStorage.removeItem("jwtToken");
+// });
 // login with google code
 const urlParams = new URLSearchParams(window.location.hash.substring(1));
 const accessToken = urlParams.get("access_token");
@@ -28,6 +38,7 @@ logout.addEventListener("click", () => {
   sessionStorage.removeItem("jwtToken");
   localStorage.clear();
   location.reload();
+  window.location.href = "http://127.0.0.1:5501/FRONTEND/login.html";
 });
 
 //function for show user ditails on page
