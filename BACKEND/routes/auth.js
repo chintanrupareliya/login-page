@@ -1,6 +1,6 @@
 const express = require("express"); //for crud aplication
 const User = require("../models/User"); //import model of user
-const {body, validationResult} = require("express-validator"); //npm module for validation
+const { body, validationResult } = require("express-validator"); //npm module for validation
 const routes = express.Router();
 const bcrypt = require("bcryptjs"); //npm module for password hashing
 var jwt = require("jsonwebtoken"); //npm module for token
@@ -14,23 +14,23 @@ routes.post(
   "/createuser",
   //validation for name,email,password
   [
-    body("name", "name more then 3 charctor").isLength({min: 3}),
+    body("name", "name more then 3 charctor").isLength({ min: 3 }),
     body("email", "enter valid email").isEmail(),
-    body("password", "password must be 8 charector long").isLength({min: 8}),
+    body("password", "password must be 8 charector long").isLength({ min: 8 }),
   ],
   async (req, res) => {
     //if any error acure in validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({errors: errors.array()});
+      return res.status(400).json({ errors: errors.array() });
     }
     try {
       //check the given email is allready exist or note if it is in database the this  throw error
-      let user = await User.findOne({email: req.body.email});
+      let user = await User.findOne({ email: req.body.email });
       if (user) {
         return res
           .status(400)
-          .json({error: "sorry this email was allrady ragitered"});
+          .json({ error: "sorry this email was allrady ragitered" });
       }
       //for password hashing
       //first genrate salt and then hash the password with salt
@@ -50,8 +50,8 @@ routes.post(
       const jwtDATA = jwt.sign(data, JWT_SECRET);
       res.json(jwtDATA);
     } catch (error) {
-      console.error(error.message);
-      res.status(500).send("some error occured");
+      console.log(error.message);
+      res.status(500).send(error.message);
     }
   }
 );
@@ -61,22 +61,22 @@ routes.post(
   "/login",
   [
     body("email", "enter valid email").isEmail(),
-    body("password", "password must be 8 charector long").isLength({min: 8}),
+    body("password", "password must be 8 charector long").isLength({ min: 8 }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({errors: errors.array()});
+      return res.status(400).json({ errors: errors.array() });
     }
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     try {
-      const user = await User.findOne({email});
+      const user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({error: "email allready exist"});
+        return res.status(400).json({ error: "User not Exist" });
       }
       const matchpassword = await bcrypt.compare(password, user.password);
       if (!matchpassword) {
-        return res.status(400).json({error: "worng password"});
+        return res.status(400).json({ error: "worng password" });
       }
       const data = {
         user: {
@@ -86,8 +86,8 @@ routes.post(
       const jwtDATA = jwt.sign(data, JWT_SECRET);
       res.json(jwtDATA);
     } catch (error) {
-      console.error(error.message);
-      res.status(500).send("Internal server error!");
+      console.log(error.message);
+      res.status(500).send(error.message);
     }
   }
 );
@@ -100,7 +100,7 @@ routes.post("/getuser", fatchuser, async (req, res) => {
     res.send(user);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Internal server error!");
+    res.status(500).send(error.message);
   }
 });
 module.exports = routes;
