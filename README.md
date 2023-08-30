@@ -1,7 +1,6 @@
 # LogIn-SingUp
 
 Login singUp page for website with backend in mongodb
-Sure! Here's a sample README file for the given repository:
 
 # LogIn-SignUp
 
@@ -15,6 +14,8 @@ This repository contains a simple LogIn and SignUp system implemented using HTML
 - User authentication: Once registered, users can log in using their email and password.
 - Password hashing: User passwords are securely hashed before storing them in the database.
 - Responsive design: The application is designed to adapt to different screen sizes, providing a good user experience on both desktop and mobile devices.
+- Login with your Google account: Click on the "Continue with Google" button to securely log in using your Google credentials.
+- Logout: You can log out of your account by clicking on the "Logout" button.
 
 ## Installation
 
@@ -31,6 +32,10 @@ To run this application locally, follow these steps:
    ```bash
    cd LogIn-SingUp
    ```
+   
+3. Create your google Oauth2 api and put client id hear
+
+![change this with your google client id](https://ik.imagekit.io/o5vougxqi/Screenshot_2023-06-19_231855.png?updatedAt=1687197057348)
    
 # for Backend
 
