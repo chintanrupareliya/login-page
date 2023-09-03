@@ -1,10 +1,11 @@
+// Selecting DOM elements
 const forms = document.querySelector(".forms"),
   eyeicon = document.querySelector("#eye-icon"),
   ceyeicon = document.querySelector("#ceyeicon"),
   leyeicon = document.querySelector("#leyeicon"),
   links = document.querySelectorAll(".link");
-
-// console.log(forms, pwShowHide, links);
+console.log(process.env.GOOGLE_CLIENT_ID);
+// Event listener for password visibility toggle
 eyeicon.addEventListener("click", () => {
   let password = document.querySelector(".singup-pass");
   if (password.type === "password") {
@@ -15,6 +16,8 @@ eyeicon.addEventListener("click", () => {
   password.type = "password";
   eyeicon.classList.replace("bx-show", "bx-hide");
 });
+
+// Event listener for confirm password visibility toggle
 ceyeicon.addEventListener("click", () => {
   let cpassword = document.querySelector(".confirm-password");
   if (cpassword.type === "password") {
@@ -25,6 +28,8 @@ ceyeicon.addEventListener("click", () => {
   cpassword.type = "password";
   ceyeicon.classList.replace("bx-show", "bx-hide");
 });
+
+// Event listener for login password visibility toggle
 leyeicon.addEventListener("click", () => {
   let lpassword = document.querySelector(".login-pass");
   if (lpassword.type === "password") {
@@ -35,23 +40,30 @@ leyeicon.addEventListener("click", () => {
   lpassword.type = "password";
   leyeicon.classList.replace("bx-show", "bx-hide");
 });
+
+// Event listener for links (probably navigation links)
 links.forEach((link) => {
   link.addEventListener("click", (e) => {
-    e.preventDefault(); //preventing form submit
+    e.preventDefault(); // Preventing form submit
     forms.classList.toggle("show-singup");
   });
 });
-//-----> code for find user from backend <------//
+
+// Code for finding user from the backend
 const formlogin = document.querySelector(".form-login");
 formlogin.addEventListener("submit", loginuser);
+
 async function loginuser(event) {
   event.preventDefault();
   const email = document.querySelector(".login-email").value;
   const password = document.querySelector(".login-pass").value;
+
   if (email === "" || password === "") {
-    alert("please enter email and password");
+    alert("Please enter email and password");
     return;
   }
+
+  // Sending a POST request to the backend for login
   await fetch("http://localhost:3030/api/auth/login", {
     method: "POST",
     headers: {
@@ -72,16 +84,9 @@ async function loginuser(event) {
           throw errorData; // Throw the error data to be caught in the next .catch block
         });
       }
-      // if (res.status !== 200) {
-      //   alert("worng password or email");
-      //   return res.json();
-      // } else {
-      //   return res.json();
-      // }
     })
     .then((data) => {
       if (data) {
-        // console.log(data.error);
         const newtoken = JSON.stringify(data).substring(
           1,
           JSON.stringify(data).length - 1
@@ -91,19 +96,23 @@ async function loginuser(event) {
       }
     })
     .catch((err) => {
-      alert(err.error);
+      alert(err.errors);
     });
 }
-//----> create new user<----//
+
+// Code for creating a new user
 const formsingup = document.querySelector(".form-singup");
-formsingup.addEventListener("submit", singupuser);
-async function singupuser(event) {
+formsingup.addEventListener("submit", signupuser);
+
+async function signupuser(event) {
   event.preventDefault();
   const name = document.querySelector(".singin-name").value;
   const email = document.querySelector(".singup-email").value;
   const password = document.querySelector(".singup-pass").value;
   const confirmpassword = document.querySelector(".confirm-password").value;
+
   if (password === confirmpassword) {
+    // Sending a POST request to the backend for user registration
     await fetch("http://localhost:3030/api/auth/createuser", {
       method: "POST",
       headers: {
@@ -135,14 +144,14 @@ async function singupuser(event) {
         }
       })
       .catch((err) => {
-        alert(err.error);
+        alert(err.errors);
       });
   } else {
-    alert("password and confirm password not match");
+    alert("Password and confirm password do not match");
   }
 }
 
-// function for client implimentaion
+// Function for Google OAuth sign-in
 function oauthSignIn() {
   // Google's OAuth 2.0 endpoint for requesting an access token
   var oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -154,8 +163,7 @@ function oauthSignIn() {
 
   // Parameters to pass to OAuth 2.0 endpoint.
   var params = {
-    client_id:
-      "591524786365-mgv1904ibanept57krmnios4hc58kkp0.apps.googleusercontent.com",
+    client_id: "YOUR_GOOGLE_AUTH_CLIENT_ID",
     redirect_uri: "http://127.0.0.1:5501/FRONTEND/main.html",
     response_type: "token",
     scope:
@@ -173,7 +181,7 @@ function oauthSignIn() {
     form.appendChild(input);
   }
 
-  // Add form to page and submit it to open the OAuth 2.0 endpoint.
+  // Add form to the page and submit it to open the OAuth 2.0 endpoint.
   document.body.appendChild(form);
   form.submit();
 }
